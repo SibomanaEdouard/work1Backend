@@ -11,6 +11,10 @@ const TaskSchema = new mongoose.Schema({
     ref:'users',
     required:true
   },
+  status:{
+type:String,
+default:"uncompleted"
+  },
   time:{
     type:Date,
     default:Date.now

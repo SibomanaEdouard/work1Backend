@@ -17,7 +17,7 @@ app.use(cors());
 config();
 
 //connect to mongodb;
-const con=mongo.connect(process.env.MONGO)
+const con=mongo.connect(process.env.MONGO_URL)
 .then(()=>{
 console.log("It is connected ");
 })
@@ -49,7 +49,7 @@ server.listen(port,(error)=>{
     throw error;
     }
     else{
-        console.log("the server is running on port " +port );
+        console.log("the server is running on port " + port );
     }
 })
 
