@@ -18,6 +18,14 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true,     
     },
+    phone:{
+        type:String,
+        required:false,     
+    },
+    imageUrl:{
+        type:String,
+        required:false,     
+    },
   
 })
 module.exports=mongoose.model('users',userSchema);

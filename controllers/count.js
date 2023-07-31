@@ -21,20 +21,23 @@ if(numberOfTask!=null){
 }
 
 //this is the logic to retrieve the username
-const username=async(req,res)=>{
-    const{sender}=req.body;
-    try{
-const name=await Users.findById({_id:sender}).select("username");
-if(name!==null){
-    res.status(200).json(name);
-}else{
-    res.status(404).json('The username is not found');
-}
-    }catch(error){
-console.log(error);
-res.status(500).json("something went wrong");
+const username = async (req, res) => {
+    const { sender } = req.body;
+  
+    try {
+      const name = await Users.findById(sender);
+  
+      if (name !== null) {
+        res.status(200).json(name);
+      } else {
+        res.status(404).json('The username is not found');
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json("something went wrong");
     }
-}
+  };
+  
 module.exports={
     count,
  username

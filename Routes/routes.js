@@ -12,6 +12,12 @@ const username=require("../controllers/count").username;
 const deletedTasks=require("../models/deletedTasks");
 const getDeletedTasks=require("../controllers/getDeletedTasks");
 const deleteHistory=require("../controllers/deleteHistory");
+const ChangePassword=require("../controllers/newPassword");
+const userInfo=require("../controllers/getUserProfile");
+const UpdateInfo=require("../controllers/updateInfo");
+const CountCompleted=require('../controllers/completedTasks');
+const CountUnCompleted=require('../controllers/unCompletedTasks');
+const multer=require('multer');
 
 //this is to insert the user in the system
 app.post('/sign',async(req,res)=>{
@@ -44,6 +50,8 @@ res.status(400).json("Something went wrong");
     }
     
 })
+
+//user login
 app.post('/login',async(req,res)=>{
     const{email,password}=req.body;
  //let me check if the email is exist 
@@ -68,6 +76,7 @@ app.post('/login',async(req,res)=>{
  }
 })
 
+//this is to add  to add the task
 app.post("/tasks",async(req,res)=>{
     const {task,sender}=req.body;
     try{
@@ -134,7 +143,7 @@ app.put('/', async (req, res) => {
   const { sender, taskId,updatedtask,updatedstatus } = req.body;
   try {
     
-    const task = await Tasks.findOne({ sender, _id: taskId });
+  const task = await Tasks.findOne({ sender, _id: taskId });
 
     if (!task) {
       return res.status(404).json({error:"The task is not found!"});
@@ -156,7 +165,6 @@ app.put('/', async (req, res) => {
     res.status(500).json({error:"Something went wrong!"});
   }
 });
-
 
 //this is to delete one task from the database
 app.delete('/one', async (req, res) => {
@@ -224,13 +232,57 @@ app.delete('/', async (req, res) => {
   }
 });
 
-
 //this is the route for getting the number of the task for the user
  app.post('/getNumber',count);
+
  //this is the route to get username 
  app.post('/getUsername',username);
+
  //let me get history
  app.post('/getdeleted',getDeletedTasks);
+
  //this is the logic to delete the  data from history 
  app.post('/deletehistory',deleteHistory);
+
+ //update password
+ app.put('/updatepassword',ChangePassword);
+ //to get user info
+ app.post('/userinfo',userInfo);
+ //to update user info
+ app.put('/updateinfo',UpdateInfo);
+ //to count completed
+ app.post("/countcompleted",CountCompleted);
+ //to count uncompleted
+ app.post("/countuncompleted",CountUnCompleted);
+
+  //this is to update the image
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage });
+app.put('/updateImage', upload.single('image'), async (req, res) => {
+  const { userId } = req.body;
+  try {
+      const file = req.file;
+      const imageUrl = file.filename;
+      
+      // Update the user's image URL
+      const updateImage = await userSchema.findByIdAndUpdate(userId,{imageUrl})
+      if(updateImage){
+        res.status(200).json({imageUrl });
+      }
+
+    else {
+      res.status(404).json({ error: 'The failed to update image'});
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Something went Wrong. Please try again later' });
+  }
+});
+app.use('/uploads', express.static('uploads'));
 module.exports=app;
