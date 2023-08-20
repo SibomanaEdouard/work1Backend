@@ -281,7 +281,7 @@ app.put('/updateImage', upload.single('image'), async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'Something went Wrong. Please try again later' });
+    res.status(500).json({ error: 'Something went Wrong! Please try again later' });
   }
 });
 app.use('/uploads', express.static('uploads'));
