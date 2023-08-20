@@ -17,7 +17,7 @@ app.use(cors());
 config();
 
 //connect to mongodb;
-const con=mongo.connect(process.env.MONGO_URL)
+const con=mongo.connect(process.env.MONGO)
 .then(()=>{
 console.log("It is connected ");
 })
